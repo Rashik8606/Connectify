@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connectify</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
+  <script src="{% static '/javascript/index.js' %}"></script>
+
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <img src="/media/icon/ChatGPT_Image_Apr_21__2025__11_29_42_PM-removebg-preview.png" alt="connectify">
+    <div>
+    <button><i class="fas fa-home"></i></button>
+    </div>
+    <button onclick="toggleSearch()"><i class="fas fa-search"></i></button>
+    <div id="search-bar" class="search-bar hidden">
+      <input type="text" placeholder="Search..." />
+    </div>
+    <div>
+    <button><i class="fas fa-bell"></i></button>
+      </div>
+    <div>
+    <button>{% if request.user.userprofile.profile_pic and request.user.userprofile.profile_pic.name %}
+      <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Profile Picture" class="profile-img">
+    {% else %}
+      <img src="{% static 'images/default-image.jpg' %}" alt="Default Profile" class="profile-img">
+    {% endif %}</button>
+  </div>
+    <form action="{% url 'login:logout' %}" method="post">
+      {% csrf_token %}
+      <button><i class="fa-solid fa-right-from-bracket"></i></button>
+    </form>
+    <p>{{user.username}}</p>
+  </div>  
+
+  
+<div class="feed">
+  <!-- Post form at the top of feed -->
+  <form action="" method="POST" enctype="multipart/form-data" class="post-form">
+    {% csrf_token %}
+    <label for="id_description">Caption:</label>
+    {{ form.description }}
+
+    <label for="id_image_video">Image or Video:</label>
+    {{ form.image_video }}
+
+    <button type="submit">Post</button>
+  </form>
+
+  <!-- Example Posts (You can replace this with dynamic posts) -->
+  
+
+  <div class="post">
+    {% for post in posts%}
+    <h3>{{ post.user.username }}</h3>
+    <p>{{ post.description }}</p>
+  
+    {% if post.image_video %}
+      <div class="media-center">
+        {% if post.is_video %}
+          <video controls>
+            <source src="{{ post.image_video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        {% else %}
+          <img src="{{ post.image_video.url }}" alt="Post Image">
+        {% endif %}
+      </div>
+    {% endif %}
+  
+    <div class="post-actions">
+      <button><i class="fas fa-heart"></i></button>
+      <button><i class="fas fa-comment"></i></button>
+      <button><i class="fas fa-paper-plane"></i></button>
+    </div>
+    {% endfor %}
+  </div>
+    <style>
+      .post-actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 12px;
+      }
+      
+      .post-actions button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #555;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      
+      .post-actions button:hover {
+        color: var(--color-primary);
+        
+      }
+      
+    </style>
+    <div class="post">
+      <h3>Ali Khan</h3>
+      <p>Checkout my latest travel vlog to the mountains 🏔️</p>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <h4>Friend Suggestions</h4>
+    {% if users %}
+      {% for user in users %}
+        {% if user.user != request.user %} {# Don't show yourself #}
+          <div class="suggestion">
+            {% if user.profile_pic and user.profile_pic.name %}
+              <img src="{{ user.profile_pic.url }}" alt="{{ user.user.username }}" style="width: 50px; height: 50px; border-radius: 50%;" />
+            {% else %}
+              <img src="{% static 'images/default_profil.png' %}" alt="{{ user.user.username }}" style="width: 50px; height: 50px; border-radius: 50%;" />
+            {% endif %}
+    
+            <div class="suggestion-info">
+              <p>{{ user.user.username }}</p>
+              <span>@{{ user.user.username|lower }}</span>
+            </div>
+    
+            <form method="post" action="{% url 'home:follow_toggle' user.user.id %}">
+              {% csrf_token %}
+              {% if user in request.user.userprofile.following.all %}
+                <button type="submit" class="follow-btn">Unfollow</button>
+              {% else %}
+                <button type="submit" class="follow-btn">Follow</button>
+              {% endif %}
+            </form>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p>No users found.</p>
+    {% endif %}
+  </div>
+  
+  
+  
+</body>
+</html>

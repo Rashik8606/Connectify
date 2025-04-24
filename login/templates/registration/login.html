@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/login-page.css' %}?v=3">
+</head>
+<body>
+<div class="container">
+  <form class="login-form" action="{% url 'login:login-page' %}" method="post">
+    {% csrf_token %}
+    <h2>Log In</h2>
+    {% if form.non_field_errors %}
+    <span class="text-danger">{{ form.non_field_errors.0 }}</span>
+    {% endif %}
+    <label class="submit-label">Email Address
+      <input class="submit-input" type="text" name="email" />
+      {% if form.email.errors %}
+      <span class="text-danger">{{ form.email.errors.0 }}</span>
+    {% endif %}
+    </label>
+    <label class="submit-label">Password
+      <input class="submit-input" type="password" name="password" />
+      {% if form.password.errors %}
+      <span class="text-danger">{{ form.password.errors.0 }}</span>
+    {% endif %}
+    </label>
+    <button class="stn-btn" type="submit">Log In</button>
+    {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="alert 
+        {% if message.tags == 'success' %} alert-success 
+        {% elif message.tags == 'error' %} alert-error 
+        {% endif %}">
+        {{ message }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<p class="account-text">
+  You Don't  have an account?
+  <a href="{% url 'login:signup-page' %}" class="login-link">Log in here</a>
+</p>
+  </form>
+</div>
+</body>
+</html>

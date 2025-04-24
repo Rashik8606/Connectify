@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/login-page.css' %}?v=3">
+</head>
+<body>
+    <div class="container">
+        <!-- Sign Up Section -->
+        <form class="submit-form" action="{% url 'login:signup-page' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label class="submit-label">
+            Profile Picture
+            <input type="file" name="profile_pic" accept="image/*" />
+            {% if form.profile_pic.errors %}
+            <span class="text-danger">{{ form.profile_pic.errors.0 }}</span>
+            {% endif %}
+          </label>
+          <label class="submit-label">Username
+            <input class="submit-input" type="text" name="username"  value="{{ form.username.value|default:'' }}" />
+            {% if form.username.errors %}
+            <span class="text-danger">{{ form.username.errors.0 }}</span>
+          {% endif %}
+          </label>
+          <label class="submit-label">Email
+            <input class="submit-input" type="text" name="email" value="{{ form.email.value|default:'' }}"/>
+            {% if form.email.errors %}
+            <span class="text-danger">{{ form.email.errors.0 }}</span>
+          {% endif %}
+          </label>
+          <label class="submit-label">Password 
+            <input class="submit-input" type="password" name="password1" />
+            {% if form.password1.errors %}
+            <span class="text-danger">{{ form.password1.errors.0 }}</span>
+          {% endif %}
+          </label>
+          <label class="submit-label">Confirm Password
+            <input class="submit-input" type="password" name="password2" />
+            {% if form.password2.errors %}
+            <span class="text-danger">{{ form.password2.errors.0 }}</span>
+          {% endif %}
+          </label>
+          <label class="submit-label">Phone Number
+            <input class="submit-input" type="number" name="phonenumber" />
+            {% if form.phonenumber.errors %}
+            <span class="text-danger">{{ form.phonenumber.errors.0 }}</span>
+          {% endif %}
+          </label>
+          <button class="stn-btn" type="submit">Sign Up</button>
+          {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="alert 
+              {% if message.tags == 'success' %} alert-success 
+              {% elif message.tags == 'error' %} alert-error 
+              {% endif %}">
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <p class="account-text">
+        Already have an account?
+        <a href="{% url 'login:login-page' %}" class="login-link">Log in here</a>
+      </p>
+        </form>
+      </div>
+      
+</body>
+</html>

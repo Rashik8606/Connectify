@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    display: flex;
+    gap: 30px;
+    padding: 40px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .submit-form {
+    flex: 1;
+    padding: 20px;
+  }
+  .login-form {
+    flex: 1;
+    padding: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+  }
+
+  .submit-label {
+    display: block;
+    margin-bottom: 18px;
+    color: #555;
+    font-weight: 500;
+  }
+
+  .submit-input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+  }
+
+  .submit-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+  }
+
+  .stn-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .stn-btn:hover {
+    background-color: #3730a3;
+  }
+
+  /* Optional: Add a vertical divider */
+  .divider {
+    width: 2px;
+    background: #ddd;
+  }
+
+  @media(max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+    .divider {
+      display: none;
+    }
+  }
+
+  .messages {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+  }
+  
+  .upload-icon {
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .upload-icon input[type="file"] {
+    display: none; /* Hide actual file input */
+  }
+
+  .alert {
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
