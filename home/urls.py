@@ -8,5 +8,6 @@ app_name = 'home'
 urlpatterns = [
     path('',views.index,name='index'),
     path('follow/<int:user_id>/',views.follow_toggle,name='follow_toggle'),
+    path('user-profile/',views.user_profile,name='user-profile'),
     
 ]

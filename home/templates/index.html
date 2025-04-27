@@ -25,11 +25,13 @@
     <button><i class="fas fa-bell"></i></button>
       </div>
     <div>
-    <button>{% if request.user.userprofile.profile_pic and request.user.userprofile.profile_pic.name %}
-      <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Profile Picture" class="profile-img">
-    {% else %}
-      <img src="{% static 'images/default-image.jpg' %}" alt="Default Profile" class="profile-img">
-    {% endif %}</button>
+      <a href="{% url 'home:user-profile' %}">
+        {% if request.user.userprofile.profile_pic and request.user.userprofile.profile_pic.name %}
+          <img src="{{ request.user.userprofile.profile_pic.url }}" alt="Profile Picture" class="profile-img">
+        {% else %}
+          <img src="{% static 'images/default-image.jpg' %}" alt="Default Profile" class="profile-img">
+        {% endif %}
+      </a>
   </div>
     <form action="{% url 'login:logout' %}" method="post">
       {% csrf_token %}
@@ -38,7 +40,7 @@
     <p>{{user.username}}</p>
   </div>  
 
-  
+
 <div class="feed">
   <!-- Post form at the top of feed -->
   <form action="" method="POST" enctype="multipart/form-data" class="post-form">
@@ -58,7 +60,7 @@
   <div class="post">
     {% for post in posts%}
     <h3>{{ post.user.username }}</h3>
-    <p>{{ post.description }}</p>
+    <h4>{{ post.description }}</h4>
   
     {% if post.image_video %}
       <div class="media-center">
@@ -99,6 +101,14 @@
       .post-actions button:hover {
         color: var(--color-primary);
         
+      }
+      a img.profile-img {
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      
+      a img.profile-img:hover {
+        transform: scale(1.05);
       }
       
     </style>

@@ -59,3 +59,7 @@ def follow_toggle(request, user_id):
 
     return HttpResponseRedirect(reverse('home:index'))
      
+@login_required
+def user_profile(request):
+     
+     return render(request, 'user-profile.html',{'user':request.user})
