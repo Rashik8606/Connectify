@@ -61,5 +61,16 @@ def follow_toggle(request, user_id):
      
 @login_required
 def user_profile(request):
-     
-     return render(request, 'user-profile.html',{'user':request.user})
+    profile = UserProfile.objects.get(user = request.user)
+
+    followers = profile.followers.all()
+    following = profile.following.all()
+    post_count = UserPosts.objects.filter(user = request.user).count()
+
+    context = {
+         'profile':profile,
+         'followers':followers,
+         'following':following,
+         'post_count':post_count
+    }
+    return render(request, 'user-profile.html',context)
