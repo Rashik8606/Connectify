@@ -29,12 +29,12 @@ def index(request):
     else:
         form = UserPostForm()
 
-    for post in posts:
-            if post.image_video:
-                ext = post.image_video.url.split('.')[-1].lower()
-                post.is_video = ext in ['mp4', 'webm', 'ogg']
-            else:
-                 post.image_video = False
+    # for post in posts:
+    #         if post.image_video:
+    #             ext = post.image_video.url.split('.')[-1].lower()
+    #             post.is_video_file = ext in ['mp4', 'webm', 'ogg']
+    #         else:
+    #              post.image_video_file = False
 
     context = {
         'users':UserProfile.objects.all(),
@@ -66,11 +66,13 @@ def user_profile(request):
     followers = profile.followers.all()
     following = profile.following.all()
     post_count = UserPosts.objects.filter(user = request.user).count()
+    user_post = UserPosts.objects.filter(user = request.user)
 
     context = {
          'profile':profile,
          'followers':followers,
          'following':following,
-         'post_count':post_count
+         'post_count':post_count,
+         'user_post':user_post
     }
     return render(request, 'user-profile.html',context)
