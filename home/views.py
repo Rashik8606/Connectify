@@ -1,11 +1,14 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from login.models import UserProfile
-from .models import UserPosts
+from .models import UserPosts, Like
 from django.contrib.auth.models import User
 from .forms import UserPostForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from .forms import EditUserProfile, CommentForm
+from django.contrib import messages
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -16,7 +19,10 @@ def index(request):
     followed_profile = users_profile.following.all()
     followed_users = [profile.user for profile in followed_profile]
 
-    posts = UserPosts.objects.filter(user__in = followed_users).order_by('-created_at')
+    posts = UserPosts.objects.filter(user__in = followed_users).order_by('-created_at').prefetch_related('comments')
+
+    for post in posts:
+        post.liked_by_user = Like.objects.filter(user = request.user, post = post).exists()
 
     if request.method == 'POST':
         form = UserPostForm(request.POST, request.FILES)
@@ -28,13 +34,6 @@ def index(request):
             return redirect('home:index') 
     else:
         form = UserPostForm()
-
-    # for post in posts:
-    #         if post.image_video:
-    #             ext = post.image_video.url.split('.')[-1].lower()
-    #             post.is_video_file = ext in ['mp4', 'webm', 'ogg']
-    #         else:
-    #              post.image_video_file = False
 
     context = {
         'users':UserProfile.objects.all(),
@@ -76,3 +75,47 @@ def user_profile(request):
          'user_post':user_post
     }
     return render(request, 'user-profile.html',context)
+
+
+@login_required
+def edit_profile(request):
+    profile = UserProfile.objects.get(user = request.user)
+
+    if request.method == 'POST':
+        form = EditUserProfile(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.error(request, 'Profile Updated')
+            return redirect('home:user-profile')
+    else:
+        form = EditUserProfile(instance=profile)
+    return render(request, 'profile-edit.html', {'form':form})
+
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(UserPosts, id = post_id)
+    like, created = Like.objects.get_or_create(user = request.user, post = post)
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    return JsonResponse({
+        'liked':liked,
+        'like_count':post.like_count()
+    })
+
+
+def comment_post(request, post_id):
+    post = get_object_or_404(UserPosts, id = post_id)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.post = post
+            comment.save()
+    return redirect('home:index')
+
+

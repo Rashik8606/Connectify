@@ -22,3 +22,24 @@ class UserPosts(models.Model):
         ext = os.path.splitext(self.image_video.name)[1].lower()
         return ext in ['.mp4', '.webm', 'ogg']
     
+    def like_count(self):
+        return self.likes.count()
+    
+    def comments_count(self):
+        return self.comments.count()
+    
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(UserPosts, on_delete=models.CASCADE, related_name='likes')
+    like_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')  #prevent multiple likes
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(UserPosts, on_delete=models.CASCADE, related_name='comments')
+    text = models.TextField()
+    comment_at = models.DateTimeField(auto_now_add=True)

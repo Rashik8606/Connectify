@@ -28,8 +28,9 @@
                     <span>{{following.count}} Following</span>
                   </div>
                   
-                <p>Bio: Just a simple user who loves coding! 🚀</p>
-                <button class="edit-profile-btn">Edit Profile</button>
+                <p>{{user.userprofile.bio}}</p>
+                <p>{{user.userprofile.college_name}}</p>
+                <a href="{% url 'home:user-profile-edit' %}">Edit Profile</a>
               </div>
             </div>
       

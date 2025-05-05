@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 class UserProfile(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
     phonenumber = models.CharField(max_length=15)
+    bio = models.TextField(blank=True,null=True)
+    college_name = models.CharField(max_length=255, blank=True, null=True)
     profile_pic = models.ImageField(upload_to='profile_pic/',default='profile_pic/default.jpg',blank=True)
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
     

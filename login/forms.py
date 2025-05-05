@@ -9,10 +9,12 @@ class CustomCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     phonenumber = forms.CharField(max_length=15)
     profile_pic = forms.ImageField(required=False)
+    college_name = forms.CharField(max_length=100, required=False)
+    bio = forms.CharField(widget=forms.Textarea, required=False)
 
     class Meta:
         model = User
-        fields = ['username','email','password1','password2','profile_pic','phonenumber']
+        fields = ['username','email','password1','password2','profile_pic','phonenumber','college_name','bio']
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -35,7 +37,9 @@ class CustomCreationForm(UserCreationForm):
             UserProfile.objects.create(
                 user = user,
                 phonenumber = self.cleaned_data['phonenumber'],
-                profile_pic = self.cleaned_data.get('profile_pic')
+                profile_pic = self.cleaned_data.get('profile_pic'),
+                college_name = self.cleaned_data.get('college_name'),
+                bio = self.cleaned_data.get('bio')
             )
         return user
     
