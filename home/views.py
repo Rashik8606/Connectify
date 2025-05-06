@@ -9,6 +9,8 @@ from django.urls import reverse
 from .forms import EditUserProfile, CommentForm
 from django.contrib import messages
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
 
 
 # Create your views here.
@@ -106,16 +108,24 @@ def like_post(request, post_id):
         'like_count':post.like_count()
     })
 
-
+@require_POST
+@login_required
 def comment_post(request, post_id):
     post = get_object_or_404(UserPosts, id = post_id)
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.user = request.user
-            comment.post = post
-            comment.save()
-    return redirect('home:index')
+    form = CommentForm(request.POST)
+    print("Form valid:", form.is_valid())  # Log form validation
+    print("POST data:", request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.post = post
+        comment.save()
+        return JsonResponse({
+            'success':True,
+            'text':comment.text,
+            'username':comment.user.username
+        })
+    else:
+        return JsonResponse({'success':False, 'error':'Empty comment'})
 
 

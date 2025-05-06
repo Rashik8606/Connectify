@@ -78,12 +78,12 @@
         </div>
   
         <div id="comment-section-{{ post.id }}" style="display: none; margin-top:10px;">
-          <form action="{% url 'home:comment-post' post.id %}" method="POST">
+          <form id="comment-form-{{ post.id }}" onsubmit="submitComment(event, {{post.id}})">
             {% csrf_token %}
             <input type="text" name="text" placeholder="Write a comment..." required>
             <button type="submit">Post</button>
           </form>
-          <div class="comments-section">
+          <div class="comments-section" id="comment-list-{{ post.id }}">
             {% for comment in post.comments.all %}
               <p><strong>{{ comment.user.username }}:</strong> {{ comment.text }}</p>
             {% empty %}
@@ -193,6 +193,7 @@
         });
       });
     });
+
     function toggleCommentBox(postId) {
       const commentBox = document.getElementById(`comment-box-${postId}`);
       if (commentBox.style.display === "none") {
@@ -201,10 +202,45 @@
           commentBox.style.display = "none";
       }
   }
+
   function toggleCommentSection(postId) {
     const section = document.getElementById(`comment-section-${postId}`);
     section.style.display = section.style.display === 'none' || section.style.display === '' ? 'block' : 'none';
   }
+
+
+  function submitComment(event, postId) {
+    event.preventDefault();
+
+    const form = document.getElementById(`comment-form-${postId}`);
+    const formData = new FormData(form);
+
+    fetch(`/comment/${postId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+        },
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Response data:", data);
+        if (data.success) {
+            const commentsDiv = document.getElementById(`comment-list-${postId}`);
+            const newComment = document.createElement('p');
+            newComment.innerHTML = `<strong>${data.username}:</strong> ${data.text}`;
+            commentsDiv.appendChild(newComment);
+            form.reset();
+        } else {
+            alert(data.error || "Failed to submit comment.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Something went wrong while submitting the comment.");
+    });
+}
+
   </script>
     
   
