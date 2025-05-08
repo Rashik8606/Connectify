@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Connectify</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=4">
-  <script src="{% static '/javascript/index.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5">
+  <script src="{% static '/javascript/index.js' %}?v=2"></script>
 
 </head>
 <body>
@@ -17,6 +17,13 @@
     <div>
     <button><i class="fas fa-home"></i></button>
     </div>
+    <div>
+      <a href="{% url 'inbox' request.user.username %}">
+      <button><i class="fa-solid fa-paper-plane"></i></button>
+      </a>
+      </div>
+      
+
     <button onclick="toggleSearch()"><i class="fas fa-search"></i></button>
     <div id="search-bar" class="search-bar hidden">
       <input type="text" placeholder="Search..." />
@@ -96,40 +103,6 @@
     <!-- end loop over posts -->
   </div>
   
-    <style>
-      .post-actions {
-        display: flex;
-        gap: 16px;
-        margin-top: 12px;
-      }
-      
-      .post-actions button {
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: #555;
-        cursor: pointer;
-        transition: color 0.2s;
-      }
-      
-      .post-actions button:hover {
-        color: var(--color-primary);
-        
-      }
-      a img.profile-img {
-        cursor: pointer;
-        transition: transform 0.2s;
-      }
-      
-      a img.profile-img:hover {
-        transform: scale(1.05);
-      }
-      .liked {
-        color: red;
-      }
-      
-    </style>
-   
   <!-- Right Panel -->
   <div class="right-panel">
     <h4>Friend Suggestions</h4>
@@ -163,87 +136,6 @@
       <p>No users found.</p>
     {% endif %}
   </div>
-  
-  <script>
-    document.querySelectorAll('.like-btn').forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.preventDefault();
-        const postId = this.getAttribute('data-post-id');
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  
-        fetch(`/like/${postId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrftoken,
-            'X-Requested-With': 'XMLHttpRequest',
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          const icon = this.querySelector('i');
-          const countSpan = this.querySelector('.like-count');
-  
-          countSpan.textContent = data.like_count;
-  
-          if (data.liked) {
-            icon.classList.add('liked');
-          } else {
-            icon.classList.remove('liked');
-          }
-        });
-      });
-    });
-
-    function toggleCommentBox(postId) {
-      const commentBox = document.getElementById(`comment-box-${postId}`);
-      if (commentBox.style.display === "none") {
-          commentBox.style.display = "block";
-      } else {
-          commentBox.style.display = "none";
-      }
-  }
-
-  function toggleCommentSection(postId) {
-    const section = document.getElementById(`comment-section-${postId}`);
-    section.style.display = section.style.display === 'none' || section.style.display === '' ? 'block' : 'none';
-  }
-
-
-  function submitComment(event, postId) {
-    event.preventDefault();
-
-    const form = document.getElementById(`comment-form-${postId}`);
-    const formData = new FormData(form);
-
-    fetch(`/comment/${postId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-        },
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("Response data:", data);
-        if (data.success) {
-            const commentsDiv = document.getElementById(`comment-list-${postId}`);
-            const newComment = document.createElement('p');
-            newComment.innerHTML = `<strong>${data.username}:</strong> ${data.text}`;
-            commentsDiv.appendChild(newComment);
-            form.reset();
-        } else {
-            alert(data.error || "Failed to submit comment.");
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Something went wrong while submitting the comment.");
-    });
-}
-
-  </script>
-    
-  
   
 </body>
 </html>

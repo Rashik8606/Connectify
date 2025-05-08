@@ -128,4 +128,3 @@ def comment_post(request, post_id):
     else:
         return JsonResponse({'success':False, 'error':'Empty comment'})
 
-

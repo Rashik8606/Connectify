@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inbox - Chat </title>
+  <link rel="stylesheet" href="{% static 'css/inbox.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="search-box">
+      <input type="text" placeholder="Search chats...">
+    </div>
+    <div class="user">
+      <img src="{% if user_profile.profile_pic %}{{ user_profile.profile_pic.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="">
+      <div class="info">
+        <h4>{{user.username}}</h4>
+        <p>Active now</p>
+      </div>
+      <div class="online-dot"></div>
+    </div>
+    {% for followed_user in followings %}
+  <a href="{% url 'inbox' followed_user.user.username %}">
+    <div class="user">
+      <img src="{% if followed_user.profile_pic %}{{ followed_user.profile_pic.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="profile">
+      <div class="info">
+        <h4>{{followed_user.user.username}}</h4>    
+        <p>15h ago</p>
+      </div>
+    </div>
+    {% empty %}
+    <p>no users followed</p>
+    {% endfor   %}
+  </a>
+    <!-- Add more users here -->
+  </div>
+
+
+  <div class="chat-section">
+    <div class="chat-header">
+      {% if selected_user %}
+      <img src="{% if selected_user.userprofile.profile_pic %}{{ selected_user.userprofile.profile_pic.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="default">
+      <div>
+        <h4 style="margin: 0; color: #fff;">{{selected_user.username}}</h4>
+        <small style="color: #aaa;">Active now</small>
+      </div>
+      {% else %}
+      <p>select a user to start chatting</p>
+      {% endif %}
+    </div>
+    <div class="chat-messages">
+      {% for msg in messages %}
+      <div class="message {% if msg.sender == user %}sent{% else %}received{% endif %}  ">
+        {{msg.content}}
+        <small>{{msg.timestamp|timesince}} ago </small>
+      </div>
+     
+      {% empty %}
+      <p>No Message yet</p>
+      {% endfor %}
+      <!-- <div class="message sent"></div>
+      <div class="message sent"></div> -->
+    </div>
+    <div class="chat-input">
+      <form action="" method="POST">
+        {% csrf_token %}
+      <input type="text" placeholder="Type a message... "  name="content" value="{{ form.content.value }}">
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

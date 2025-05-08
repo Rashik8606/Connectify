@@ -1,9 +1,10 @@
 from django.urls import path
-from . import views
+from .views import InboxAndSendMessageView
 
 
 
 urlpatterns = [
-    path('inbox/',views.inbox,name='inbox'),
-    path('send/',views.send_message, name='send_message'),
+    path('inbox/',InboxAndSendMessageView.as_view(),name='inbox-default'),
+    path('inbox/<str:username>/',InboxAndSendMessageView.as_view(),name='inbox'),
+
 ]
