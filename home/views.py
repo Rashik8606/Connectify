@@ -96,17 +96,25 @@ def edit_profile(request):
 
 @login_required
 def like_post(request, post_id):
-    post = get_object_or_404(UserPosts, id = post_id)
-    like, created = Like.objects.get_or_create(user = request.user, post = post)
-    if not created:
-        like.delete()
-        liked = False
+    if request.method == 'POST':
+        user = request.user
+        post = get_object_or_404(UserPosts, id = post_id)
+
+        like, created = Like.objects.get_or_create(user = user, post = post)
+
+        if not created:
+            like.delete()
+            liked = False
+        else:
+            liked = True
+
+        like_count = post.like_count
+        return JsonResponse({
+            'liked':liked,
+            'like_count':like_count
+        })
     else:
-        liked = True
-    return JsonResponse({
-        'liked':liked,
-        'like_count':post.like_count()
-    })
+        return JsonResponse({'error':'invalid request method'}, status = 400)
 
 @require_POST
 @login_required

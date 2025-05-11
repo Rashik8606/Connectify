@@ -3,10 +3,11 @@ function toggleSearch() {
     searchBar.classList.toggle('hidden');
 }
 
-
-document.querySelectorAll('.like-btn').forEach(button => {
-    button.addEventListener('click', function(e) {
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.like-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
       e.preventDefault();
+
       const postId = this.getAttribute('data-post-id');
       const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
@@ -14,7 +15,7 @@ document.querySelectorAll('.like-btn').forEach(button => {
         method: 'POST',
         headers: {
           'X-CSRFToken': csrftoken,
-          'X-Requested-With': 'XMLHttpRequest',
+          'X-Requested-With': 'XMLHttpRequest'
         }
       })
       .then(response => response.json())
@@ -32,6 +33,8 @@ document.querySelectorAll('.like-btn').forEach(button => {
       });
     });
   });
+});
+
 
   function toggleCommentBox(postId) {
     const commentBox = document.getElementById(`comment-box-${postId}`);

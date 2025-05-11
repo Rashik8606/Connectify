@@ -7,7 +7,7 @@
   <title>Connectify</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5">
-  <script src="{% static '/javascript/index.js' %}?v=2"></script>
+  <script src="{% static '/javascript/index.js' %}?v=4"></script>
 
 </head>
 <body>
@@ -75,14 +75,17 @@
         {% endif %}
         
         <div class="post-actions">
-          <button class="like-btn" data-post-id="{{ post.id }}">
-            <i class="fas fa-heart {% if post.liked_by_user %}liked{% endif %}"></i>
-            <span class="like-count">{{ post.like_count }}</span>
-          </button>
-          <button type="button" onclick="toggleCommentSection({{ post.id }})" style="background:none; border:none;">
-            <i class="fas fa-comment"></i>
-          </button>
-        </div>
+  <button class="like-btn" data-post-id="{{ post.id }}">
+    <i class="fas fa-heart {% if post.liked_by_user %}liked{% endif %}"></i>
+    <span class="like-count">{{ post.like_count }}</span>
+</button>
+  <button type="button" onclick="toggleCommentSection({{ post.id }})" style="background:none; border:none;">
+    <i class="fas fa-comment"></i>
+  </button>
+</div>
+
+
+
   
         <div id="comment-section-{{ post.id }}" style="display: none; margin-top:10px;">
           <form id="comment-form-{{ post.id }}" onsubmit="submitComment(event, {{post.id}})">
@@ -98,11 +101,13 @@
             {% endfor %}
           </div>
         </div>
-      </div>
-    {% endfor %}
-    <!-- end loop over posts -->
- <i class="fas fa-share-square"></i>
+          <i class="fa-solid fa-share-nodes" title="Share this post"></i>
 
+      </div>
+
+    {% endfor %}
+   
+    <!-- end loop over posts -->
   </div>
   <!-- Right Panel -->
   <div class="right-panel">

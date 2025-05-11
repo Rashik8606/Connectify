@@ -22,6 +22,7 @@ class UserPosts(models.Model):
         ext = os.path.splitext(self.image_video.name)[1].lower()
         return ext in ['.mp4', '.webm', 'ogg']
     
+    @property
     def like_count(self):
         return self.likes.count()
     
