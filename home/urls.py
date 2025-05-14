@@ -12,5 +12,8 @@ urlpatterns = [
     path('edit-profile/',views.edit_profile,name='user-profile-edit'),
     path('like/<int:post_id>/', views.like_post,name='like-post'),
     path('comment/<int:post_id>/', views.comment_post,name='comment-post'),
+    path('share-post/<int:post_id>/',views.share_post, name='share-post'),
+    path('post/<int:post_id>/', views.post_detail, name='post_detail')
+
     
 ]

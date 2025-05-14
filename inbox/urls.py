@@ -4,7 +4,7 @@ from .views import InboxAndSendMessageView
 
 
 urlpatterns = [
-    path('inbox/',InboxAndSendMessageView.as_view(),name='inbox-default'),
-    path('inbox/<str:username>/',InboxAndSendMessageView.as_view(),name='inbox'),
+    path('',InboxAndSendMessageView.as_view(),name='inbox-default'),
+    path('<str:username>/',InboxAndSendMessageView.as_view(),name='inbox'),
 
 ]

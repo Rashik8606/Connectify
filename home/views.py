@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from login.models import UserProfile
-from .models import UserPosts, Like
+from .models import UserPosts, Like , Share
 from django.contrib.auth.models import User
 from .forms import UserPostForm
 from django.http import HttpResponseRedirect
@@ -10,21 +10,24 @@ from .forms import EditUserProfile, CommentForm
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-
-
+from inbox.models import Message
 
 # Create your views here.
 
 @login_required
 def index(request):
-    users_profile = UserProfile.objects.get(user = request.user)
-    followed_profile = users_profile.following.all()
+    user_profile = UserProfile.objects.get(user = request.user)
+    followed_profile = user_profile.following.all()
     followed_users = [profile.user for profile in followed_profile]
 
     posts = UserPosts.objects.filter(user__in = followed_users).order_by('-created_at').prefetch_related('comments')
 
     for post in posts:
         post.liked_by_user = Like.objects.filter(user = request.user, post = post).exists()
+
+    followers = user_profile.followers.all()
+
+    shared_post = Share.objects.filter(sender=request.user).select_related('original_post').order_by('-share_at')
 
     if request.method == 'POST':
         form = UserPostForm(request.POST, request.FILES)
@@ -40,7 +43,9 @@ def index(request):
     context = {
         'users':UserProfile.objects.all(),
         'form':form,
-        'posts':posts
+        'posts':posts,
+        'followers':followers,
+        'shared_post':shared_post
         }
     
     return render(request,'index.html',context)
@@ -136,3 +141,38 @@ def comment_post(request, post_id):
     else:
         return JsonResponse({'success':False, 'error':'Empty comment'})
 
+@login_required
+def share_post(request,post_id):
+    if request.method == 'POST':
+        recipient_id = request.POST.get('recipient_id')
+
+        if not recipient_id:
+            return JsonResponse({'message': 'No recipient selected'}, status=400)
+
+        try:
+            recipient = User.objects.get(id=recipient_id)
+        except User.DoesNotExist:
+            return JsonResponse({'message': 'Recipient not found'}, status=404)
+
+        post = get_object_or_404(UserPosts, id=post_id)
+        sender = request.user
+
+        Share.objects.get_or_create(sender=sender, recipient=recipient, original_post=post)
+        
+
+        message_text = f'/post/{post_id}'
+        Message.objects.create(
+            sender=request.user,
+            recipient=recipient,
+            context=message_text,
+            post = post
+        )
+
+        return JsonResponse({'message': 'Post shared successfully!'}, status=200)
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(UserPosts, id=post_id)
+    return render(request, 'index.html', {'post': post})

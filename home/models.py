@@ -44,3 +44,14 @@ class Comment(models.Model):
     post = models.ForeignKey(UserPosts, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     comment_at = models.DateTimeField(auto_now_add=True)
+
+
+class Share(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_shares',default=1)
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_shares',null=True, blank=True)
+    original_post = models.ForeignKey(UserPosts, on_delete=models.CASCADE, related_name='shared_by')
+    share_at = models.DateField(auto_now_add=True)
+    message = models.TextField(blank=True , null=True)
+
+    def __str__(self):
+        return f"{self.sender.username} share to {self.recipient.username} "

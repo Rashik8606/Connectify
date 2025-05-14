@@ -1,4 +1,5 @@
 {% load static %}
+{% load dict_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,19 +55,50 @@
       <p>select a user to start chatting</p>
       {% endif %}
     </div>
-    <div class="chat-messages">
-      {% for msg in messages %}
-      <div class="message {% if msg.sender == user %}sent{% else %}received{% endif %}  ">
-        {{msg.content}}
-        <small>{{msg.timestamp|timesince}} ago </small>
-      </div>
-     
-      {% empty %}
-      <p>No Message yet</p>
-      {% endfor %}
-      <!-- <div class="message sent"></div>
-      <div class="message sent"></div> -->
-    </div>
+
+
+ {% for msg in messages %}
+  <div class="message {% if msg.sender == user %}sent{% else %}received{% endif %}">
+
+    {% if msg.context and '/post/' in msg.context %}
+      {% with msg.context|split:"/post/" as context_parts %}
+        {% if context_parts.1 %}
+          {% with post_id=context_parts.1 %}
+        {% with shared_post=shared_posts_dict|get_item:post_id %}
+        {% if shared_post %}
+          <div class="shared-post">
+            <a href="{% url 'home:post_detail' shared_post.id %}">
+              {% if shared_post.is_image %}
+                <img src="{{ shared_post.image_video.url }}" alt="Post Image" width="200">
+              {% elif shared_post.is_video %}
+                <video width="200" controls>
+                  <source src="{{ shared_post.image_video.url }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              {% else %}
+                <p>No media available for this post</p>
+              {% endif %}
+              <p>{{ shared_post.description }}</p>
+            </a>
+          </div>
+        {% else %}
+          <p>Post not found for ID: {{ post_id }}</p>
+        {% endif %}
+      {% endwith %}
+
+          {% endwith %}
+        {% else %}
+          <p>Error: Post ID could not be parsed from context: {{ msg.context }}</p>
+        {% endif %}
+      {% endwith %}
+    {% else %}
+      <p>{{ msg.content }}</p>
+    {% endif %}
+    
+    <small>{{ msg.timestamp }}</small>
+  </div>
+{% endfor %}
+
     <div class="chat-input">
       <form action="" method="POST">
         {% csrf_token %}

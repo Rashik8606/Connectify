@@ -63,7 +63,6 @@
       <div class="post">
         <h3>{{ post.user.username }}</h3>
         <h4>{{ post.description }}</h4>
-        
         {% if post.image_video %}
           <div class="media-center">
             {% if post.is_video %}
@@ -74,19 +73,190 @@
           </div>
         {% endif %}
         
+        <!-- like Button -->
         <div class="post-actions">
-  <button class="like-btn" data-post-id="{{ post.id }}">
-    <i class="fas fa-heart {% if post.liked_by_user %}liked{% endif %}"></i>
-    <span class="like-count">{{ post.like_count }}</span>
-</button>
-  <button type="button" onclick="toggleCommentSection({{ post.id }})" style="background:none; border:none;">
-    <i class="fas fa-comment"></i>
-  </button>
+        <button class="like-btn" data-post-id="{{ post.id }}">
+          <i class="fas fa-heart {% if post.liked_by_user %}liked{% endif %}"></i>
+          <span class="like-count">{{ post.like_count }}</span>
+      </button>
+        <button type="button" onclick="toggleCommentSection({{ post.id }})" style="background:none; border:none;">
+          <i class="fas fa-comment"></i>
+        </button>
+
+      <!-- share button -->
+        <button onclick="openShareModal({{ post.id }})">
+        <i class="fa-solid fa-paper-plane"></i>
+        </button>
+
+      <!-- Share Modal -->
+      <div id="shareModal-{{ post.id }}" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Share</h3>
+            <button onclick="closeShareModal({{ post.id }})">X</button>
+          </div>
+          <input type="text" placeholder="Search followers..." onkeyup="filterFollowers(this, {{ post.id }})">
+          <div class="followers-list">
+            {% for follower in followers %}
+            <div class="follower-item">
+              <img src="{{follower.profile_pic.url}}" alt="profile" class="profile-pic">
+              <span>{{ follower.user.username }}</span>
+            <form action="{% url 'home:share-post' post.id %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="post_id" value="{{ post.id }}">
+              <input type="hidden" name="recipient_id" value="{{ follower.user.id }}"> 
+              <button type="submit">Send</button>
+            </form>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+<div class="followers-grid">
+  {% for follower in followrs %}
+    <div class="follower-circle">
+      <img src="{{ follower.profile_pic.url }}" alt="profile" class="circle-pic">
+      <span class="circle-username">{{ follower.user.username }}</span>
+      <button class="send-btn" onclick="sharePostToUser({{ post.id }}, {{ follower.user.id }})">Send</button>
+    </div>
+  {% endfor %}
 </div>
 
+<style>
+  .modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
 
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 360px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  font-family: 'Segoe UI', sans-serif;
+}
 
-  
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.modal-header button:hover {
+  color: #000;
+}
+
+.modal-content input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.modal-content input[type="text"]:focus {
+  border-color: #0077cc;
+  outline: none;
+}
+
+.follower-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 8px;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+.follower-item:hover {
+  background-color: #f9f9f9;
+}
+
+.follower-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.follower-details {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.follower-details span {
+  font-weight: 500;
+  color: #333;
+}
+
+.follower-item button {
+  background-color: #0095f6;
+  color: white;
+  padding: 6px 14px;
+  font-size: 13px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.follower-item button:hover {
+  background-color: #0077cc;
+}
+
+</style>
+        <script>
+                      function openShareModal(postId) {
+              document.getElementById(`shareModal-${postId}`).style.display = 'flex';
+            }
+
+            function closeShareModal(postId) {
+              document.getElementById(`shareModal-${postId}`).style.display = 'none';
+            }
+
+            function filterFollowers(input, postId) {
+              const filter = input.value.toLowerCase();
+              const items = document.querySelectorAll(`#shareModal-${postId} .follower-item`);
+              items.forEach(item => {
+                const username = item.querySelector('span').innerText.toLowerCase();
+                item.style.display = username.includes(filter) ? 'flex' : 'none';
+              });
+            }
+
+        </script>
+        <!-- comment option -->
+      </div>
         <div id="comment-section-{{ post.id }}" style="display: none; margin-top:10px;">
           <form id="comment-form-{{ post.id }}" onsubmit="submitComment(event, {{post.id}})">
             {% csrf_token %}
@@ -101,14 +271,11 @@
             {% endfor %}
           </div>
         </div>
-          <i class="fa-solid fa-share-nodes" title="Share this post"></i>
-
       </div>
-
     {% endfor %}
-   
     <!-- end loop over posts -->
   </div>
+ 
   <!-- Right Panel -->
   <div class="right-panel">
     <h4>Friend Suggestions</h4>

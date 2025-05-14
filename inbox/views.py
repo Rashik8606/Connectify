@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db import models
+from home.models import UserPosts
 
 
 # Create your views here.
@@ -34,12 +35,25 @@ class InboxAndSendMessageView(LoginRequiredMixin,View):
                 (models.Q(sender = selected_user) & models.Q(recipient = request.user))
             ).order_by('timestamp')
 
+        shared_post_ids = []
+        for msg in messages:
+            if msg.context and '/post/' in msg.context:
+                try:
+                    post_id = int(msg.context.split('/post/')[1])
+                    shared_post_ids.append(post_id)
+                except:
+                    continue
+
+        shared_posts = UserPosts.objects.filter(id__in=shared_post_ids)
+        shared_posts_dict = {str(post.id):post for post in shared_posts}
+
         return render(request, self.template_name,{
             'form':form,
             'user_profile':user_profile,
             'followings':followings,
             'selected_user':selected_user,
-            'messages':messages
+            'messages':messages,
+            'shared_posts_dict':shared_posts_dict
         })
     
     def post(self, request,username=None):
