@@ -80,7 +80,7 @@
               {% else %}
                 <p>No media available for this post</p>
               {% endif %}
-              <p>{{ shared_post.description }}</p>
+              <p style="color: white;">{{ shared_post.description }}</p>
             </a>
           </div>
         {% else %}
@@ -109,5 +109,15 @@
       </form>
     </div>
   </div>
+
+
+  <script>
+  // Scroll to the bottom of chat-messages container
+  const chatMessages = document.querySelector('.chat-messages');
+  if (chatMessages) {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+</script>
+
 </body>
 </html>

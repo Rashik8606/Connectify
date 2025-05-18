@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Connectify</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=7 ">
   <script src="{% static '/javascript/index.js' %}?v=4"></script>
 
 </head>
@@ -28,9 +28,13 @@
     <div id="search-bar" class="search-bar hidden">
       <input type="text" placeholder="Search..." />
     </div>
+
     <div>
+      <a href="{% url 'notifications' %}">
     <button><i class="fas fa-bell"></i></button>
+    </a>
       </div>
+
     <div>
       <a href="{% url 'home:user-profile' %}">
         {% if request.user.userprofile.profile_pic and request.user.userprofile.profile_pic.name %}
@@ -46,7 +50,7 @@
     </form>
     <p>{{user.username}}</p>
   </div>  
-
+  <div class="feed-wrapper">
   <div class="feed">
     <!-- post‑form stays outside the loop -->
     <form action="" method="POST" enctype="multipart/form-data" class="post-form">
@@ -274,6 +278,7 @@
       </div>
     {% endfor %}
     <!-- end loop over posts -->
+  </div>
   </div>
  
   <!-- Right Panel -->

@@ -15,3 +15,22 @@ class Message(models.Model):
 
     def __str__(self):
         return f'From {self.sender} to {self.recipient}' 
+    
+
+class Notification(models.Model):
+    NOTIFICATION_TYPES = (
+        ('like' , 'Like'),
+        ('comment','Comment'),
+        ('following', 'Following')
+    )
+
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_notification')
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient_notification')
+    post = models.ForeignKey(UserPosts, on_delete=models.CASCADE, null=True , blank=True)
+    notification_type = models.CharField(max_length=20, choices=NOTIFICATION_TYPES)
+    message = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.sender} {self.notification_type} to {self.recipient}'

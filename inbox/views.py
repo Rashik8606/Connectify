@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect
-from .models import Message
+from .models import Message, Notification
 from .forms import MessageForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView,CreateView
+from django.views.generic import ListView,CreateView,TemplateView
 from django.views import View
 from login.models import UserProfile
 from django.shortcuts import get_object_or_404
@@ -80,7 +80,7 @@ class InboxAndSendMessageView(LoginRequiredMixin,View):
                 (models.Q(sender = selected_user) & models.Q(recipient = request.user))
             ).order_by('-timestamp')
 
-        received_message = Message.objects.filter(recipient = request.user).order_by('-timestamp')
+        received_message = Message.objects.filter(recipient = request.user).order_by('timestamp')
         return render(request, self.template_name, {
             'form':form,
             'user_profile':user_profile,
@@ -92,13 +92,18 @@ class InboxAndSendMessageView(LoginRequiredMixin,View):
 
     
     
+class NotificationPage(LoginRequiredMixin,TemplateView):
+    template_name = 'notification.html'
 
-# class SendMessageView(LoginRequiredMixin, CreateView):
-#     model = Message
-#     form_class = MessageForm
-#     template_name = 'inbox.html'
-#     success_url = reverse_lazy('inbox')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        notification = Notification.objects.filter(recipient = self.request.user).order_by('-created_at')
 
-#     def form_valid(self, form):
-#         form.instance.sender = self.request.user
-#         return super().form_valid(form)
+
+        notification.update(is_read = True)
+
+        context ['notifications'] = notification
+        return context
+
+    
+    

@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from login.models import UserProfile
+from inbox.models import Notification
 from .models import UserPosts, Like , Share
 from django.contrib.auth.models import User
 from .forms import UserPostForm
@@ -107,6 +108,17 @@ def like_post(request, post_id):
 
         like, created = Like.objects.get_or_create(user = user, post = post)
 
+
+        if created :
+            if post.user != user:
+                Notification.objects.create(
+                    sender = user,
+                    recipient = post.user,
+                    post = post,
+                    notification_type = 'like',
+                    message = f'{user.username} liked your post'
+                )
+
         if not created:
             like.delete()
             liked = False
@@ -133,6 +145,16 @@ def comment_post(request, post_id):
         comment.user = request.user
         comment.post = post
         comment.save()
+
+
+        if post.user != request.user:
+            Notification.objects.create(
+                sender = request.user,
+                recipient = post.user,
+                post = post,
+                notification_type = 'comment',
+                message = f'{request.user.username} commented on your post '
+            )
         return JsonResponse({
             'success':True,
             'text':comment.text,
@@ -147,12 +169,14 @@ def share_post(request,post_id):
         recipient_id = request.POST.get('recipient_id')
 
         if not recipient_id:
-            return JsonResponse({'message': 'No recipient selected'}, status=400)
+            messages.error(request, 'No recipient selected')
+            return redirect('home:index')
 
         try:
             recipient = User.objects.get(id=recipient_id)
         except User.DoesNotExist:
-            return JsonResponse({'message': 'Recipient not found'}, status=404)
+            messages.error(request,'Recipient Not Found..')
+            return redirect('home:index')
 
         post = get_object_or_404(UserPosts, id=post_id)
         sender = request.user
@@ -167,10 +191,10 @@ def share_post(request,post_id):
             context=message_text,
             post = post
         )
+        messages.error(request, 'post shared Successfully ..')
+        return redirect('home:index')
 
-        return JsonResponse({'message': 'Post shared successfully!'}, status=200)
-
-    return JsonResponse({'message': 'Invalid request'}, status=400)
+    return redirect('home:index')
 
 @login_required
 def post_detail(request, post_id):

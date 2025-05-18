@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="notification-container">
+    <h2>Notifications</h2>
+    
+    <div class="notification-list">
+      <!-- Example notification -->
+       {% for notif in notifications %}
+      <div class="notification {% if not notif.is_read %}unread{% endif %}">
+        <img src="{{ notif.sender.userprofile.profile_pic.url}}" alt="User" class="avatar">
+        <div class="content">
+          <p><strong></strong>{{notif.message}}</p>
+          <span class="time">{{notif.created_at|timesince }} ago..</span>
+        </div>
+      </div>
+      {% empty %}
+      <p>No Notification yet </p>
+      {% endfor %}
+
+      
+    </div>
+  </div>
+  <style>
+    body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+
+.notification-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.notification.unread {
+  background-color: #e0f7fa;
+}
+
+.notification:hover {
+  background-color: #d1ecf1;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.content {
+  flex: 1;
+}
+
+.content p {
+  margin: 0;
+  font-size: 15px;
+}
+
+.time {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  margin-top: 5px;
+}
+
+  </style>
+</body>
+</html>

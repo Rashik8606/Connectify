@@ -269,6 +269,8 @@ a img.profile-img:hover {
   color: red;
 }
 
+
+
 /* ---------- Responsive Styling ---------- */
 @media (max-width: 1024px) {
   .sidebar {
@@ -282,7 +284,7 @@ a img.profile-img:hover {
   }
 
   .sidebar:hover {
-    width: 180px;
+    width: 80px;
   }
 
   .feed {
@@ -321,6 +323,7 @@ a img.profile-img:hover {
     width: 100%;
     margin: 0;
     padding: 16px 12px;
+    padding-bottom: 80px;
   }
 
   .post {
