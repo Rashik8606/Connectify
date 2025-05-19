@@ -27,10 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['https://connectify-78ei.onrender.com']
 
-from decouple import config, Csv
-
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
-
 
 # Application definition
 
