@@ -79,8 +79,6 @@ WSGI_APPLICATION = 'connectify.wsgi.application'
 
 from decouple import config
 
-print("DEBUG from .env:", config('DEBUG', default='Not found'))
-print("SECRET_KEY from .env:", config('SECRET_KEY', default='Not found'))
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
@@ -95,6 +93,8 @@ DATABASES = {
         'PORT': config('DB_PORT',cast=int),
     }
 }
+print("DB_HOST =", config('DB_HOST'))
+
 
 
 # Password validation
