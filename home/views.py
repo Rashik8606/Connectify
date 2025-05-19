@@ -64,7 +64,7 @@ def follow_toggle(request, user_id):
     else:
          current_user_profile.following.add(target_profile)
 
-    return HttpResponseRedirect(reverse('home:index'))
+    return redirect(request.META.get('HTTP_REFERER','home:index'))
      
 @login_required
 def user_profile(request):
@@ -200,3 +200,27 @@ def share_post(request,post_id):
 def post_detail(request, post_id):
     post = get_object_or_404(UserPosts, id=post_id)
     return render(request, 'index.html', {'post': post})
+
+
+# class based views.........
+
+from django.views.generic import ListView
+from django.db.models import Q
+
+
+class UserSearchView(ListView):
+    model = UserProfile
+    template_name = 'search-user.html'
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return UserProfile.objects.filter(Q(user__username__icontains = query))
+        return UserProfile.objects.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_user_profile = UserProfile.objects.get(user = self.request.user)
+        context['following_ids'] = current_user_profile.following.values_list('id',flat=True)
+        return context

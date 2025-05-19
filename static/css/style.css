@@ -103,6 +103,7 @@ body {
   border-radius: 18px;
   padding: 20px;
   overflow-y: auto;
+  max-height: calc(100vh - 40px);
 }
 
 .right-panel h4 {
@@ -268,7 +269,9 @@ a img.profile-img:hover {
 .liked {
   color: red;
 }
-
+.main-container {
+  display: flex;
+}
 
 
 /* ---------- Responsive Styling ---------- */
@@ -293,14 +296,19 @@ a img.profile-img:hover {
   }
 
 }
+.sidebar img[alt="connectify"] {
+  width: 40px;
+  height: auto;
+  margin: 0 auto 30px;
+  display: block;
+}
 
 @media (max-width: 768px) {
-   .main-container {
+  .main-container {
     flex-direction: column;
-   }
-    .right-panel {
-      display: none;
+    padding: 10px;
   }
+  
   .sidebar {
     width: 100%;
     height: 60px;
@@ -311,62 +319,95 @@ a img.profile-img:hover {
     padding: 0 10px;
     bottom: 0;
     top: auto;
+    left: 0;
+    right: 0; /* Added to ensure full width */
     z-index: 100;
+    overflow: hidden; /* Prevent content from spilling out */
   }
 
-  .sidebar img,
+  /* Show profile section on mobile */
+  .sidebar .profile-img,
+  .sidebar .user {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  /* Make profile image smaller on mobile */
+  .sidebar .profile-img {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+  }
+
+  /* Adjust feed to account for fixed bottom sidebar */
+  .feed {
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px 12px;
+    padding-bottom: 80px; /* Increase padding to prevent content from being hidden behind sidebar */
+  }
+
+  /* Hide text labels on mobile sidebar buttons */
+  .sidebar button span {
+    display: none;
+  }
+
+  /* Make sidebar buttons more compact */
+  .sidebar button {
+    font-size: 18px;
+    margin: 0;
+    padding: 6px;
+    width: auto;
+  }
+
+  /* Ensure sidebar stays in place */
+  .sidebar:hover {
+    width: 100%;
+  }
+  
+  /* Hide right panel on mobile */
+  .right-panel {
+    display: none;
+  }
+  
+  /* Hide the logo on mobile to save space */
+  .sidebar img[alt="connectify"] {
+    display: none;
+  }
+  
+  /* Show username on mobile */
   .sidebar p {
     display: none;
   }
+}
 
-  .feed {
-    width: 100%;
+/* Additional fix for profile section visibility */
+@media (max-width: 768px) {
+  .sidebar img.profile-img {
+    display: block;
+  }
+  
+  /* Show minimal user info on mobile */
+  .user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
     margin: 0;
-    padding: 16px 12px;
-    padding-bottom: 80px;
+    padding: 0;
+    width: auto;
   }
-
-  .post {
-    padding: 12px;
+  
+  /* Adjust info display for mobile */
+  .user .info {
+    display: none; /* Hide username/status text on mobile to save space */
   }
-
-  .post h3 {
-    font-size: 16px;
-  }
-
-  .post p,
-  .suggestion-info span {
-    font-size: 13px;
-  }
-
-  .modal-content {
-    width: 90%;
-    padding: 16px;
-  }
-
-  .suggestion {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .suggestion img {
-    margin-bottom: 6px;
-  }
-
-  .suggestion-info {
-    margin-bottom: 8px;
-  }
-
-  .follow-btn {
-    width: 100%;
-  }
-
-  .search-bar {
-    display: none;
-  }
-
-  .profile-img {
-    width: 30px;
-    height: 30px;
+  
+  /* Make online dot smaller on mobile */
+  .user .online-dot {
+    width: 8px;
+    height: 8px;
+    margin-left: 2px;
   }
 }

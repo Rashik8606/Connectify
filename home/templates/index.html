@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Connectify</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=7 ">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=10 ">
   <script src="{% static '/javascript/index.js' %}?v=4"></script>
 
 </head>
 <body>
   <!-- Sidebar -->
+
   <div class="sidebar">
     <img src="/media/icon/ChatGPT_Image_Apr_21__2025__11_29_42_PM-removebg-preview.png" alt="connectify">
     <div>
@@ -23,11 +24,15 @@
       </a>
       </div>
       
+   <form action="{% url 'home:user-search' %}" method="get">
+  <button type="button" onclick="toggleSearch()">
+    <i class="fas fa-search"></i>
+  </button>
+  <div id="search-bar" class="search-bar hidden">
+    <input type="text" name="q" placeholder="Search..." />
+  </div>
+</form>
 
-    <button onclick="toggleSearch()"><i class="fas fa-search"></i></button>
-    <div id="search-bar" class="search-bar hidden">
-      <input type="text" placeholder="Search..." />
-    </div>
 
     <div>
       <a href="{% url 'notifications' %}">
@@ -50,7 +55,7 @@
     </form>
     <p>{{user.username}}</p>
   </div>  
-  <div class="feed-wrapper">
+<div class="main-container">
   <div class="feed">
     <!-- post‑form stays outside the loop -->
     <form action="" method="POST" enctype="multipart/form-data" class="post-form">
@@ -314,6 +319,6 @@
       <p>No users found.</p>
     {% endif %}
   </div>
-  
+  </div>
 </body>
 </html>
