@@ -79,7 +79,10 @@ WSGI_APPLICATION = 'connectify.wsgi.application'
 
 from decouple import config
 
-SECRET_KEY = config('8606457692')
+print("DEBUG from .env:", config('DEBUG', default='Not found'))
+print("SECRET_KEY from .env:", config('SECRET_KEY', default='Not found'))
+
+SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 DATABASES = {
