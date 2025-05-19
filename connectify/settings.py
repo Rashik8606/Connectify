@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-!#btc*$u_y6&mykc^oegwcdld@k7q9yni0vbk3@64*aw7i%ceu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://connectify-78ei.onrender.com']
+
+from decouple import config, Csv
+
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 
 # Application definition
@@ -65,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -80,18 +85,19 @@ WSGI_APPLICATION = 'connectify.wsgi.application'
 from decouple import config
 
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', cast=bool)
-
+if os.getenv("RENDER", None):  # Render sets this env var
+    DB_HOST = config('DB_HOST')
+else:
+    DB_HOST = 'localhost'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT', 5432),
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': DB_HOST,
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
 
