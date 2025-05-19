@@ -1,0 +1,413 @@
+:root {
+  --color-bg: #f4f6fa;
+  --color-primary: #121926;
+  --color-muted: #9fa4af;
+  --color-hover: #e8ecf4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #dadee5;
+  overflow-x: hidden;
+
+}
+
+
+/* Left Sidebar */
+.sidebar {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  bottom: 20px;
+  width: 80px;
+  background: #ffffff;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  transition: width 0.3s;
+  z-index: 10;
+}
+
+.sidebar:hover {
+  width: 220px;
+}
+
+.sidebar img {
+  width: 40px;
+  margin-bottom: 30px;
+}
+
+.sidebar button {
+  background: none;
+  border: none;
+  color: #384251;
+  font-size: 20px;
+  margin: 10px 0;
+  width: 100%;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.sidebar button:hover {
+  background: var(--color-hover);
+}
+
+/* Center Feed */
+.feed {
+  margin-left: 100px;
+  margin-right: 300px;
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.post h3 {
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.post p {
+  font-size: 14px;
+  color: #444;
+}
+
+/* Right Panel */
+.right-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  width: 260px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 40px);
+}
+
+.right-panel h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #121926;
+}
+
+.suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.suggestion img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.suggestion-info {
+  flex: 1;
+}
+
+.suggestion-info p {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.suggestion-info span {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.follow-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.follow-btn:hover {
+  opacity: 0.9;
+}
+
+/* sidebar search bar */
+.search-bar {
+  width: 100%;
+  padding: 0 12px;
+  margin: 10px 0;
+  transition: all 0.3s ease;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* Hide by default */
+.hidden {
+  display: none;
+}
+
+.profile-img {
+  width: 50px;               /* Same width and height */
+  height: 50px;
+  border-radius: 50%;        /* Fully round */
+  object-fit: cover;         /* Makes sure image fills the circle */
+  border: 2px solid #ccc;    /* Optional: adds a clean border */
+  display: block;
+  margin: 0 auto;    /* Optional: add a border */
+}
+.post-form {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-form label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.post-form input, .post-form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  height: 80px;
+  resize: none;
+}
+
+.post-form button {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.post-form button:hover {
+  opacity: 0.9;
+}
+
+.media-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.media-center img,
+.media-center video {
+  max-width: 90%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.post-actions button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.post-actions button:hover {
+  color: var(--color-primary);
+  
+}
+a img.profile-img {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+a img.profile-img:hover {
+  transform: scale(1.05);
+}
+.liked {
+  color: red;
+}
+.main-container {
+  display: flex;
+}
+
+
+/* ---------- Responsive Styling ---------- */
+@media (max-width: 1024px) {
+  .sidebar {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    height: 100vh;
+    border-radius: 0;
+    width: 60px;
+    padding-top: 16px;
+  }
+
+  .sidebar:hover {
+    width: 80px;
+  }
+
+  .feed {
+    margin-left: 80px;
+    margin-right: 0;
+  }
+
+}
+.sidebar img[alt="connectify"] {
+  width: 40px;
+  height: auto;
+  margin: 0 auto 30px;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0; /* Added to ensure full width */
+    z-index: 100;
+    overflow: hidden; /* Prevent content from spilling out */
+  }
+
+  /* Show profile section on mobile */
+  .sidebar .profile-img,
+  .sidebar .user {
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  /* Make profile image smaller on mobile */
+  .sidebar .profile-img {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+  }
+
+  /* Adjust feed to account for fixed bottom sidebar */
+  .feed {
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px 12px;
+    padding-bottom: 80px; /* Increase padding to prevent content from being hidden behind sidebar */
+  }
+
+  /* Hide text labels on mobile sidebar buttons */
+  .sidebar button span {
+    display: none;
+  }
+
+  /* Make sidebar buttons more compact */
+  .sidebar button {
+    font-size: 18px;
+    margin: 0;
+    padding: 6px;
+    width: auto;
+  }
+
+  /* Ensure sidebar stays in place */
+  .sidebar:hover {
+    width: 100%;
+  }
+  
+  /* Hide right panel on mobile */
+  .right-panel {
+    display: none;
+  }
+  
+  /* Hide the logo on mobile to save space */
+  .sidebar img[alt="connectify"] {
+    display: none;
+  }
+  
+  /* Show username on mobile */
+  .sidebar p {
+    display: none;
+  }
+}
+
+/* Additional fix for profile section visibility */
+@media (max-width: 768px) {
+  .sidebar img.profile-img {
+    display: block;
+  }
+  
+  /* Show minimal user info on mobile */
+  .user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+  
+  /* Adjust info display for mobile */
+  .user .info {
+    display: none; /* Hide username/status text on mobile to save space */
+  }
+  
+  /* Make online dot smaller on mobile */
+  .user .online-dot {
+    width: 8px;
+    height: 8px;
+    margin-left: 2px;
+  }
+}
