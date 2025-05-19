@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-!#btc*$u_y6&mykc^oegwcdld@k7q9yni0vbk3@64*aw7i%ceu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://connectify-78ei.onrender.com']
+ALLOWED_HOSTS = ['connectify-78ei.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
