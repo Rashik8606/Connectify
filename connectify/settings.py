@@ -91,9 +91,9 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'RashikSocial$default',
-        'USER': 'RashikSocial',
-        'PASSWORD': 'Rashik@123',
+        'NAME': config('DB_NAME', default='RashikSocial$default'),
+        'USER': config('DB_USER', default='RashikSocial'),
+        'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'RashikSocial.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
