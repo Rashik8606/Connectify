@@ -84,10 +84,7 @@ WSGI_APPLICATION = 'connectify.wsgi.application'
 
 
 
-if os.getenv("RENDER", None):  # Render sets this env var
-    DB_HOST = config('DB_HOST')
-else:
-    DB_HOST = 'localhost'
+
 
 DATABASES = {
     'default': {
@@ -95,12 +92,10 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': DB_HOST,  # <- use the DB_HOST variable from above
-        'PORT': config('DB_PORT'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='5432'),
     }
 }
-
-
 
 
 # Password validation

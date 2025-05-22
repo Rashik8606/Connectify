@@ -33,6 +33,7 @@ def login_user(request):
         password = request.POST.get('password')
 
         user = authenticate(request, username = user_or_email, password = password)
+        
         if user is None:
             try:
                 user_obj = User.objects.get(email = user_or_email)
