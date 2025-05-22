@@ -93,7 +93,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'RashikSocial$default',
         'USER': 'RashikSocial',
-        'PASSWORD': 'your_mysql_password_here',
+        'PASSWORD': 'Rashik@123',
         'HOST': 'RashikSocial.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
