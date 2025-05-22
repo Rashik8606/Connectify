@@ -88,19 +88,17 @@ import pymysql
 pymysql.install_as_MySQLdb()
 
 
-
-if os.environ.get('PYTHONANYWHERE_DOMAIN'):
-    # Running on PythonAnywhere
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'RashikSocial$default',
         'USER': 'RashikSocial',
-        'PASSWORD': 'Rashik@123',
+        'PASSWORD': 'your_mysql_password_here',
         'HOST': 'RashikSocial.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }
+
 
 
 # Password validation
