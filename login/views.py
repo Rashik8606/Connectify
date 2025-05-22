@@ -9,18 +9,22 @@ from django.contrib import messages
 
 def user_signup(request):
     if request.method == 'POST':
-        form = CustomCreationForm(request.POST,request.FILES)   
+        form = CustomCreationForm(request.POST, request.FILES)   
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request,'Account created Successfully  You are now logged in')
-            return redirect('home:index')
+            try:
+                user = form.save()
+                login(request, user)
+                messages.success(request, 'Account created Successfully. You are now logged in.')
+                return redirect('home:index')
+            except Exception as e:
+                messages.error(request, 'An error occurred while saving your account.')
+                print("Exception during form.save():", e)
         else:
-            messages.error(request,'There was an issue with your sign-up. Please try again.')
-            print(form.errors)
+            messages.error(request, 'There was an issue with your sign-up. Please try again.')
+            print("Form errors:", form.errors)
     else:
         form = CustomCreationForm()
-    return render(request, 'registration/signup.html',{'form':form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 def login_user(request):

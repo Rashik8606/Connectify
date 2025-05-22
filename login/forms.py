@@ -25,7 +25,7 @@ class CustomCreationForm(UserCreationForm):
     def clean_phonenumber(self):
         phone = self.cleaned_data.get('phonenumber')
         digit_only = re.sub(r'\D','', phone)
-        if len(phone)!=10:
+        if len(digit_only) != 10:
             raise forms.ValidationError('phone number must be 10 digit ')
         return digit_only
 
