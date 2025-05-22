@@ -91,24 +91,16 @@ pymysql.install_as_MySQLdb()
 
 if os.environ.get('PYTHONANYWHERE_DOMAIN'):
     # Running on PythonAnywhere
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'RashikSocial$connectify',
-            'USER': 'RashikSocial',
-            'PASSWORD': 'Rashik@123',
-            'HOST': 'RashikSocial.mysql.pythonanywhere-services.com',
-            'PORT': '3306',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'RashikSocial$default',
+        'USER': 'RashikSocial',
+        'PASSWORD': 'Rashik@123',
+        'HOST': 'RashikSocial.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
     }
-else:
-    # Local development with SQLite
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 
 # Password validation
