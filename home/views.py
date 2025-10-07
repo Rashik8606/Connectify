@@ -13,7 +13,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from inbox.models import Message
 
-# Create your views here.
+# Create your views here.>>
 
 @login_required
 def index(request):
